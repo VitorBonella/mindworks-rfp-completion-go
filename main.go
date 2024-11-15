@@ -21,6 +21,7 @@ func main() {
 	_ , _ = database.NewDBConnection()
 
 	routes.Setup(app)
+	
 
 	app.Listen(":7756")
 }

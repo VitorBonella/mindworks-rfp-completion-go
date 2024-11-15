@@ -90,6 +90,15 @@ func Login(c *fiber.Ctx) error {
 }
 
 func User(c *fiber.Ctx) error {
+	user,err := GetUser(c)
+	if err != nil{
+		return err
+	}
+	
+	return c.JSON(user)
+}
+
+func GetUser(c *fiber.Ctx) (*models.User,error){
 	cookie := c.Cookies("jwt")
 
 	secretKey := os.Getenv("SECRET_JWT")
@@ -100,7 +109,7 @@ func User(c *fiber.Ctx) error {
 
 	if err != nil {
 		c.Status(fiber.StatusUnauthorized)
-		return c.JSON(fiber.Map{
+		return nil, c.JSON(fiber.Map{
 			"message": "unauthenticated",
 		})
 	}
@@ -110,12 +119,12 @@ func User(c *fiber.Ctx) error {
 	user, err := database.GetUserById(claims.Issuer)
 	if err != nil {
 		c.Status(fiber.StatusInternalServerError)
-		return c.JSON(fiber.Map{
+		return nil, c.JSON(fiber.Map{
 			"message": "DB ERROR",
 		})
 	}
-	
-	return c.JSON(user)
+
+	return user,nil
 }
 
 func Logout(c *fiber.Ctx) error {

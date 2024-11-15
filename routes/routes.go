@@ -13,4 +13,13 @@ func Setup(app *fiber.App) {
 	app.Post("/api/login", controllers.Login)
 	app.Post("/api/logout", controllers.Logout)
 
+	//Equipment
+	app.Get("/api/equipments", controllers.ListEquipment)
+	app.Post("/api/equipment", controllers.CreateEquipment)
+	app.Put("/api/equipment", controllers.UpdateEquipment)
+	app.Delete("/api/equipment", controllers.DeleteEquipment)
+
+	//RFP
+	app.Post("/api/rfp", controllers.CreateRFP)
+	app.Get("/api/rfps", controllers.ListRFP)
 }

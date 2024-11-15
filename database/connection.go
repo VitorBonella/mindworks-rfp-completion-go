@@ -14,7 +14,7 @@ func NewDBConnection() (*gorm.DB, error){
 		return nil, err
 	}
 
-	db.AutoMigrate(&models.User{})
+	db.AutoMigrate(&models.User{},&models.Equipment{},&models.RFP{},&models.Requirement{})
 
 	return db, nil
 }
