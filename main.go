@@ -3,6 +3,7 @@ package main
 import (
 	"github.com/VitorBonella/mindworks-rfp-completion-go/database"
 	"github.com/VitorBonella/mindworks-rfp-completion-go/routes"
+	"github.com/VitorBonella/mindworks-rfp-completion-go/worker"
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/cors"
 )
@@ -21,7 +22,7 @@ func main() {
 	_ , _ = database.NewDBConnection()
 
 	routes.Setup(app)
-	
+	go worker.RunQueue()
 
 	app.Listen(":7756")
 }

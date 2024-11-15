@@ -10,7 +10,12 @@ import (
 
 func ListEquipment(c *fiber.Ctx) error{
 
-	equipment, err := database.ListEquipment()
+	user, err := GetUser(c)
+	if err != nil{
+		return err
+	}
+
+	equipment, err := database.ListEquipment(user.Id)
 	if err != nil {
 		c.Status(fiber.StatusInternalServerError)
 		return c.JSON(fiber.Map{
@@ -23,13 +28,18 @@ func ListEquipment(c *fiber.Ctx) error{
 
 func CreateEquipment(c *fiber.Ctx) error{
 
+	user, err := GetUser(c)
+	if err != nil{
+		return err
+	}
+
 	var data map[string]string
 
 	if err := c.BodyParser(&data); err != nil {
 		return err
 	}
 
-	equipment,err := models.NewEquipment(data["name"],data["download_link"])
+	equipment,err := models.NewEquipment(data["name"],data["download_link"],user.Id)
 	if err != nil {
 		c.Status(fiber.StatusBadRequest)
 		return c.JSON(fiber.Map{

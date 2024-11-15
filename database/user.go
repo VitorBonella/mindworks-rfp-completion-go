@@ -41,3 +41,19 @@ func GetUserById(id string) (*models.User,error){
 
 	return user,nil
 }
+
+func UpdateUser(user *models.User) error{
+
+	db, err := NewDBConnection()
+	if err != nil{
+		return err
+	}
+
+	err = db.Updates(&user).Error
+	if err != nil{
+		return err
+	}
+
+	return nil
+
+}

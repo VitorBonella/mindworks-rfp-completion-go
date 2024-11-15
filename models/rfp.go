@@ -1,7 +1,9 @@
 package models
 
 import (
+	"encoding/json"
 	"errors"
+	"fmt"
 	"time"
 )
 
@@ -22,7 +24,10 @@ type Requirement struct{
 	RFPId uint `json:"rfp_id"`
 }
 
-const RFTStatusCreated = "Created"
+const RFPStatusCreated = "Created"
+const RFPtatusProcessing = "Processing"
+const RFPStatusFinished = "Finished"
+const RFPStatusFinishedWithError = "Finished With Error"
 
 func NewRFP(name string, requirements []string, equipments []Equipment, userId uint) (*RFP,error){
 
@@ -47,8 +52,47 @@ func NewRFP(name string, requirements []string, equipments []Equipment, userId u
 		Equipments: equipments,
 		UserId: userId,
 		CreationDate: &creationDate,
-		Status: RFTStatusCreated,
+		Status: RFPStatusCreated,
 	}
 
 	return &rfp, nil
+}
+
+type Question struct {
+	Question    string `json:"question"`
+	Answer      string `json:"answer"`
+	Source      string `json:"source"`
+	Description string `json:"description"`
+}
+
+func GenerateQuestionJSON(requirements []Requirement) ([]string, error) {
+	var result []string
+	blockSize := 50
+	total := len(requirements)
+
+	for i := 0; i < total; i += blockSize {
+		end := i + blockSize
+		if end > total {
+			end = total
+		}
+
+		block := make(map[string]Question)
+		for j, req := range requirements[i:end] {
+			block[fmt.Sprintf("QUESTION_%d", i+j+1)] = Question{
+				Question:    req.Requirement,
+				Answer:      "", // Default or dynamic value
+				Source:      "", // Default or dynamic value
+				Description: "", // Default or dynamic value
+			}
+		}
+
+		jsonData, err := json.Marshal(block)
+		if err != nil {
+			return nil, err
+		}
+
+		result = append(result, string(jsonData))
+	}
+
+	return result, nil
 }

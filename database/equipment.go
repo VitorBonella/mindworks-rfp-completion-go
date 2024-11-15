@@ -38,7 +38,7 @@ func DeleteEquipment(equipment *models.Equipment) error{
 	return nil
 }
 
-func ListEquipment() ([]*models.Equipment,error) {
+func ListEquipment(userId uint) ([]*models.Equipment,error) {
 
 	db, err := NewDBConnection()
 	if err != nil{
@@ -47,7 +47,7 @@ func ListEquipment() ([]*models.Equipment,error) {
 
 	var equipments []*models.Equipment
 
-	db.Find(&equipments)
+	db.Where("user_id = ?",userId).Find(&equipments)
 
 	return equipments,nil
 }

@@ -1,6 +1,7 @@
 package controllers
 
 import (
+	"log"
 	"os"
 	"strconv"
 	"time"
@@ -141,3 +142,38 @@ func Logout(c *fiber.Ctx) error {
 		"message": "success",
 	})
 }
+
+func SetUserApiKey(c *fiber.Ctx) error{
+
+	var data map[string]string
+
+	if err := c.BodyParser(&data); err != nil {
+		return err
+	}
+
+	user,err := GetUser(c)
+	if err != nil{
+		return err
+	}
+	
+	err = user.SetAPIKey(data["api_key"])
+	if err != nil{
+		log.Println(err)
+		c.Status(fiber.StatusInternalServerError)
+		return c.JSON(fiber.Map{
+			"message": "encrypt error",
+		})
+	}
+
+	err = database.UpdateUser(user)
+	if err != nil{
+		c.Status(fiber.StatusInternalServerError)
+		return c.JSON(fiber.Map{
+			"message": "DB ERROR",
+		})
+	}
+
+	return c.JSON(fiber.Map{
+		"message": "success",
+	})
+}	

@@ -15,7 +15,7 @@ type Equipment struct {
 	UserId uint `json:"user_id"`
 }
 
-func NewEquipment(name string, downloadLink string) (*Equipment, error) {
+func NewEquipment(name string, downloadLink string,userId uint) (*Equipment, error) {
 
 	if name == ""{
 		return nil, errors.New("invalid name")
@@ -24,6 +24,7 @@ func NewEquipment(name string, downloadLink string) (*Equipment, error) {
 	equip := Equipment{
 		Name: name,
 		DownloadLink: downloadLink,
+		UserId: userId,
 	}
 
 	ok, err := equip.TestDownloadLink()
@@ -105,4 +106,33 @@ func (e *Equipment) DownLoadFile(test bool) error{
 
 	//log.Println("PDF downloaded successfully with headers!")
 	return nil
+}
+
+func DownloadManyFile(list []Equipment) ([]string,error) {
+
+	var equipPaths []string
+	for i := range list{
+		err := list[i].DownLoadFile(false)
+		if err != nil{
+			log.Println("Error to download file: ", list[i].Name)
+			continue
+		}
+		fileName := list[i].Name+".pdf"
+		equipPaths = append(equipPaths, fileName)
+	}
+
+	return equipPaths,nil
+}
+
+func DeleteManyFiles(paths []string){
+
+	for _, path := range paths {
+		err := os.Remove(path) // Remove the file at the given path
+		if err != nil {
+			log.Printf("Failed to delete file %s: %v\n", path, err)
+		} else {
+			log.Printf("Successfully deleted file %s\n", path)
+		}
+	}
+
 }

@@ -12,6 +12,7 @@ func Setup(app *fiber.App) {
 	app.Post("/api/register", controllers.Register)
 	app.Post("/api/login", controllers.Login)
 	app.Post("/api/logout", controllers.Logout)
+	app.Put("/api/apikey", controllers.SetUserApiKey)
 
 	//Equipment
 	app.Get("/api/equipments", controllers.ListEquipment)
@@ -22,4 +23,9 @@ func Setup(app *fiber.App) {
 	//RFP
 	app.Post("/api/rfp", controllers.CreateRFP)
 	app.Get("/api/rfps", controllers.ListRFP)
+	app.Put("/api/rfp/reprocess", controllers.ReprocessRFP)
+
+	//RFP Result
+	app.Get("/api/rfp/result",nil)
+	app.Get("/api/rfp/result/old",nil)
 }
