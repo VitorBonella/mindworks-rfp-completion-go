@@ -26,6 +26,6 @@ func Setup(app *fiber.App) {
 	app.Put("/api/rfp/reprocess", controllers.ReprocessRFP)
 
 	//RFP Result
-	app.Get("/api/rfp/result",nil)
+	app.Get("/api/rfp/result",controllers.RFPResult)
 	app.Get("/api/rfp/result/old",nil)
 }

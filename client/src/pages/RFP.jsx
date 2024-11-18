@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import BASE_URL from "../main";
 
 const RFPStatusCreated = "Created";
@@ -8,6 +9,7 @@ const RFPStatusFinishedWithError = "Finished With Error";
 
 const Rfp = () => {
   const [rfps, setRfps] = useState([]);
+  const navigate = useNavigate();
 
   // Fetch RFPs from the API
   useEffect(() => {
@@ -85,7 +87,7 @@ const Rfp = () => {
                   {rfp.status}
                 </span>
               </td>
-              <td className="px-4 py-2 border-b">
+              <td className="px-4 py-2 border-b flex gap-2">
                 {(rfp.status === RFPStatusCreated ||
                   rfp.status === RFPStatusFinishedWithError ||
                   rfp.status === RFPStatusFinished) && (
@@ -94,6 +96,14 @@ const Rfp = () => {
                     className="bg-blue-500 text-white py-1 px-3 rounded-md hover:bg-blue-600"
                   >
                     Reprocess
+                  </button>
+                )}
+                {rfp.status === RFPStatusFinished && (
+                  <button
+                    onClick={() => navigate(`/rfp_detail/${rfp.id}`)}
+                    className="bg-green-500 text-white py-1 px-3 rounded-md hover:bg-green-600"
+                  >
+                    Go to Details
                   </button>
                 )}
                 {!(

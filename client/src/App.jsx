@@ -6,6 +6,7 @@ import BASE_URL from "./main";
 import Rfps from "./pages/RFP";
 import Equipment from "./pages/Equipment";
 import NewRfp from "./pages/NewRFP";
+import RFPResult from './pages/RFPResult';
 
 function App() {
   const [name, setName] = useState('');
@@ -27,6 +28,7 @@ function App() {
       <Nav name={name} setName={setName} />
       <Routes>
         <Route path="/rfps" element={<Rfps />} />
+        <Route path="/rfp_detail/:id" element={<RFPResult />} /> {/* New Route */}
         <Route path="/equipment" element={<Equipment />} />
         <Route path="/new_rfp" element={<NewRfp />} />
         <Route path="/*" element={<h1> PAGINA INICIAL</h1>} />

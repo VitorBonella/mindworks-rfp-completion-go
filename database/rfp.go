@@ -35,7 +35,7 @@ func GetRFP(rfpId uint) (*models.RFP,error){
 
 	var rfp *models.RFP
 
-	err = db.Where("id = ?",rfpId).First(&rfp).Error
+	err = db.Preload("Equipments").Preload("Requirements").Where("id = ?",rfpId).First(&rfp).Error
 	if err != nil{
 		log.Println(err)
 		return nil,err

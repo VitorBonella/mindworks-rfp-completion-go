@@ -12,7 +12,7 @@ import (
 func NewDBConnection() (*gorm.DB, error){
 	db, err := gorm.Open(sqlite.Open("gorm.db"), &gorm.Config{Logger: logger.Default.LogMode(logger.Silent)})
 	if err != nil{
-		fmt.Println("Error connecting to database")
+		fmt.Println("Error connecting to database",err)
 		return nil, err
 	}
 
