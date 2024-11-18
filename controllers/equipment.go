@@ -1,8 +1,6 @@
 package controllers
 
 import (
-	"strconv"
-
 	"github.com/VitorBonella/mindworks-rfp-completion-go/database"
 	"github.com/VitorBonella/mindworks-rfp-completion-go/models"
 	"github.com/gofiber/fiber/v2"
@@ -11,7 +9,7 @@ import (
 func ListEquipment(c *fiber.Ctx) error{
 
 	user, err := GetUser(c)
-	if err != nil{
+	if err != nil || user == nil || user.Id == 0{
 		return err
 	}
 
@@ -29,7 +27,7 @@ func ListEquipment(c *fiber.Ctx) error{
 func CreateEquipment(c *fiber.Ctx) error{
 
 	user, err := GetUser(c)
-	if err != nil{
+	if err != nil || user == nil || user.Id == 0{
 		return err
 	}
 
@@ -66,28 +64,19 @@ func UpdateEquipment(c *fiber.Ctx) error{
 }
 
 func DeleteEquipment(c *fiber.Ctx) error{
-	var data map[string]string
+	var data map[string]int
 
 	if err := c.BodyParser(&data); err != nil {
 		return err
 	}
 	
 	id := data["id"]
-	intId, err := strconv.ParseUint(id,10,32)
-	if err != nil{
-		c.Status(fiber.StatusInternalServerError)
-		return c.JSON(fiber.Map{
-			"message": "ERROR",
-		})
-	}
 
 	equipment := models.Equipment{
-		Id: uint(intId),
-		Name: data["name"],
-		DownloadLink: data["download_link"],
+		Id: uint(id),
 	}
 
-	err = database.DeleteEquipment(&equipment)
+	err := database.DeleteEquipment(&equipment)
 	if err != nil {
 		c.Status(fiber.StatusInternalServerError)
 		return c.JSON(fiber.Map{

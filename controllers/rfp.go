@@ -11,7 +11,7 @@ import (
 func CreateRFP(c *fiber.Ctx) error{
 
 	user, err := GetUser(c)
-	if err != nil{
+	if err != nil || user == nil || user.Id == 0{
 		return err
 	}
 
@@ -19,6 +19,17 @@ func CreateRFP(c *fiber.Ctx) error{
 
 	if err := c.BodyParser(&data); err != nil {
 		return err
+	}
+
+	if len(data.Requirements) == 0{
+		return c.JSON(fiber.Map{
+			"message": "Empty Requirements",
+		})
+	}
+	if len(data.Equipments) == 0{
+		return c.JSON(fiber.Map{
+			"message": "Empty Equipments",
+		})
 	}
 
 	rfp, err := models.NewRFP(data.Name,data.Requirements,data.Equipments,user.Id)
@@ -44,7 +55,7 @@ func CreateRFP(c *fiber.Ctx) error{
 func ListRFP(c *fiber.Ctx) error {
 
 	user, err := GetUser(c)
-	if err != nil{
+	if err != nil || user == nil || user.Id == 0{
 		return err
 	}
 

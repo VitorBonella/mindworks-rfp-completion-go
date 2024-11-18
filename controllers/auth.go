@@ -1,6 +1,7 @@
 package controllers
 
 import (
+	"fmt"
 	"log"
 	"os"
 	"strconv"
@@ -92,7 +93,7 @@ func Login(c *fiber.Ctx) error {
 
 func User(c *fiber.Ctx) error {
 	user,err := GetUser(c)
-	if err != nil{
+	if user == nil{
 		return err
 	}
 	
@@ -107,8 +108,8 @@ func GetUser(c *fiber.Ctx) (*models.User,error){
 	token, err := jwt.ParseWithClaims(cookie, &jwt.StandardClaims{}, func(token *jwt.Token) (interface{}, error) {
 		return []byte(secretKey), nil
 	})
-
 	if err != nil {
+		fmt.Println(err)
 		c.Status(fiber.StatusUnauthorized)
 		return nil, c.JSON(fiber.Map{
 			"message": "unauthenticated",

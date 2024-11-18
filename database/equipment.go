@@ -33,7 +33,7 @@ func DeleteEquipment(equipment *models.Equipment) error{
 		return err
 	}
 
-	db.Delete(&equipment)
+	db.Debug().Delete(&equipment)
 
 	return nil
 }
