@@ -27,8 +27,18 @@ func main() {
 
 	routes.Setup(app)
 
+	pageList := []string{"/",
+						"/rfps",
+						"/new_rfp",
+						"/equipment",
+						"/login",
+						"/equipment",
+						"/rfp_detail/:id"}
+
 	if os.Getenv("ENV") == "production"{
-		app.Static("/","./client/dist")
+		for _, p := range pageList{
+			app.Static(p,"./client/dist")
+		}
 	}
 
 	go worker.RunQueue()
