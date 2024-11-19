@@ -126,6 +126,12 @@ func GetUser(c *fiber.Ctx) (*models.User,error){
 		})
 	}
 
+	if user.ApiKey != ""{
+		user.HasApiKey = true
+	} else {
+		user.HasApiKey = false
+	}
+	
 	return user,nil
 }
 
@@ -153,7 +159,7 @@ func SetUserApiKey(c *fiber.Ctx) error{
 	}
 
 	user,err := GetUser(c)
-	if err != nil{
+	if err != nil || user == nil || user.Id == 0{
 		return err
 	}
 	

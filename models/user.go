@@ -15,6 +15,7 @@ type User struct {
 	Name     string `json:"name" gorm:"unique"`
 	Password []byte `json:"-"`
 	ApiKey string `json:"-"`
+	HasApiKey bool `gorm:"-"`
 }
 
 // Function to encrypt the API Key

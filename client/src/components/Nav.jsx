@@ -1,14 +1,16 @@
-import { Link } from "react-router-dom";
+import { Link, Navigate } from "react-router-dom";
+import BASE_URL from "../main";
 
 function Nav({ name, setName }) {
   const logout = async () => {
-    await fetch("http://localhost:8000/api/logout", {
+    await fetch(BASE_URL+"/api/logout", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       credentials: "include",
     });
 
     setName("");
+    location.reload();
   };
 
   return (
