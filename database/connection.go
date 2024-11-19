@@ -15,8 +15,17 @@ func NewDBConnection() (*gorm.DB, error){
 		fmt.Println("Error connecting to database",err)
 		return nil, err
 	}
-
+	
 	db.AutoMigrate(&models.User{},&models.Equipment{},&models.RFP{},&models.Requirement{},&models.Result{})
 
 	return db, nil
+}
+
+func CloseDBConnection(db *gorm.DB) error {
+	sqlDB, err := db.DB() // Retrieve the underlying *sql.DB
+	if err != nil {
+		return fmt.Errorf("failed to retrieve database instance: %w", err)
+	}
+
+	return sqlDB.Close() // Close the connection
 }

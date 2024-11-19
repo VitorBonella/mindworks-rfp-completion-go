@@ -8,6 +8,7 @@ func CreateEquipment(equipment *models.Equipment) error{
 	if err != nil{
 		return err
 	}
+	defer CloseDBConnection(db)
 
 	db.Create(&equipment)
 
@@ -20,6 +21,7 @@ func UpdateEquipment(equipment *models.Equipment) error{
 	if err != nil{
 		return err
 	}
+	defer CloseDBConnection(db)
 
 	db.Updates(&equipment)
 
@@ -32,6 +34,7 @@ func DeleteEquipment(equipment *models.Equipment) error{
 	if err != nil{
 		return err
 	}
+	defer CloseDBConnection(db)
 
 	db.Debug().Delete(&equipment)
 
@@ -44,6 +47,7 @@ func ListEquipment(userId uint) ([]*models.Equipment,error) {
 	if err != nil{
 		return nil, err
 	}
+	defer CloseDBConnection(db)
 
 	var equipments []*models.Equipment
 

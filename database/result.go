@@ -13,6 +13,7 @@ func CreateResult(r *models.Result) error{
 	if err != nil{
 		return err
 	}
+	defer CloseDBConnection(db)
 
 	err = db.Create(&r).Error
 	if err != nil{
@@ -29,6 +30,7 @@ func GetResults(rfpId uint, equipId uint) ([]*models.Result,error){
 	if err != nil{
 		return nil,err
 	}
+	defer CloseDBConnection(db)
 
 	var results []*models.Result
 

@@ -16,7 +16,7 @@ import (
 	"github.com/google/generative-ai-go/genai"
 )
 
-const WaitTime = 5*time.Second
+const WaitTime = 30*time.Second
 
 func worker(id int, taskQueue <-chan *models.RFP) {
 	for task := range taskQueue {
@@ -143,7 +143,7 @@ func RunQueue() {
 	const numWorkers = 1
 
 	// Create the task queue
-	taskQueue := make(chan *models.RFP)
+	taskQueue := make(chan *models.RFP,100)
 
 	// Start worker goroutines
 	for i := 1; i <= numWorkers; i++ {

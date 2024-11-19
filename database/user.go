@@ -8,6 +8,7 @@ func CreateUser(user *models.User) error{
 	if err != nil{
 		return err
 	}
+	defer CloseDBConnection(db)
 
 	db.Create(&user)
 
@@ -20,6 +21,7 @@ func GetUserByName(name string) (*models.User,error){
 	if err != nil{
 		return nil,err
 	}
+	defer CloseDBConnection(db)
 
 	var user *models.User
 
@@ -34,6 +36,7 @@ func GetUserById(id string) (*models.User,error){
 	if err != nil{
 		return nil,err
 	}
+	defer CloseDBConnection(db)
 
 	var user *models.User
 
@@ -48,6 +51,7 @@ func UpdateUser(user *models.User) error{
 	if err != nil{
 		return err
 	}
+	defer CloseDBConnection(db)
 
 	err = db.Updates(&user).Error
 	if err != nil{

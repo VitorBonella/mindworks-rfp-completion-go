@@ -12,6 +12,7 @@ func CreateRFP(rfp *models.RFP) error{
 	if err != nil{
 		return err
 	}
+	defer CloseDBConnection(db)
 
 	for i := range rfp.Equipments{
 		rfp.Equipments[i].UserId = rfp.UserId
@@ -32,6 +33,7 @@ func GetRFP(rfpId uint) (*models.RFP,error){
 	if err != nil{
 		return nil,err
 	}
+	defer CloseDBConnection(db)
 
 	var rfp *models.RFP
 
@@ -51,6 +53,7 @@ func ListRFP(userId uint) ([]*models.RFP,error){
 	if err != nil{
 		return nil,err
 	}
+	defer CloseDBConnection(db)
 
 	var rfps []*models.RFP
 
@@ -69,6 +72,7 @@ func ListNewestCreatedRFP() (*models.RFP, error){
 	if err != nil{
 		return nil,err
 	}
+	defer CloseDBConnection(db)
 
 	var newestRFP *models.RFP
 
@@ -87,6 +91,7 @@ func SetRFPStatus(rfp *models.RFP, status string) error{
 	if err != nil{
 		return err
 	}
+	defer CloseDBConnection(db)
 
 	rfp.Status = status
     
