@@ -43,5 +43,9 @@ func main() {
 
 	go worker.RunQueue()
 
-	app.Listen(":8000")
+	if os.Getenv("ENV") == "production"{
+		app.Listen(":8000")
+	} else{
+		app.Listen(":5174")
+	}
 }
