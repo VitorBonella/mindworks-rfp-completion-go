@@ -9,8 +9,8 @@ import Rfps from "./pages/RFP";
 import Equipment from "./pages/Equipment";
 import NewRfp from "./pages/NewRFP";
 
-//const BASE_URL = import.meta.env.MODE === "development" ? "http://localhost:8000" : "";
-const BASE_URL = "https://orange-waddle-67v949p953x6pg-5174.app.github.dev"
+const BASE_URL = import.meta.env.MODE === "development" ? "http://localhost:8000" : "";
+//const BASE_URL = "https://orange-waddle-67v949p953x6pg-5174.app.github.dev"
 export default BASE_URL;
 
 const isAuthenticated = async () => {
