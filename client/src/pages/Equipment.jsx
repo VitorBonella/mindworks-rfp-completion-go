@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import BASE_URL from "../main";
 
 // Utility function to validate URLs
@@ -152,11 +152,13 @@ const EquipmentForm = () => {
             key={equipment.id}
             className="flex items-center justify-between p-4 border border-gray-200 rounded-md"
           >
-            <div className="flex flex-col">
+            <div className="flex flex-col flex-1">
               <span className="text-lg font-medium">{equipment.name}</span>
+
+              {/* Align View Link to the left */}
               <button
                 onClick={() => toggleLinkVisibility(index)}
-                className="text-blue-500 hover:text-blue-700 mt-2"
+                className="text-blue-500 hover:text-blue-700 mt-2 text-left"
               >
                 View Link
               </button>
@@ -164,17 +166,23 @@ const EquipmentForm = () => {
               {selectedEquipment === index && (
                 <div className="mt-2 text-gray-500 text-sm">
                   <p className="italic">Link:</p>
-                  <p className="">{equipment.download_link}</p>
+                  {/* Prevent the long link from overflowing, with wrap and ellipsis */}
+                  <p
+                    className="break-words text-ellipsis overflow-hidden"
+                    style={{ maxWidth: '100%' }}
+                  >
+                    {equipment.download_link}
+                  </p>
                 </div>
               )}
             </div>
 
-            <button
+            {/* <button
               onClick={() => handleDelete(equipment.id)}
               className="text-red-500 hover:text-red-700"
             >
               Exclude
-            </button>
+            </button> */}
           </li>
         ))}
       </ul>

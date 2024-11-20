@@ -1,5 +1,6 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import { FiRefreshCw } from "react-icons/fi"; // Import refresh icon
 import BASE_URL from "../main";
 
 const RFPStatusCreated = "Created";
@@ -13,13 +14,17 @@ const Rfp = () => {
 
   // Fetch RFPs from the API
   useEffect(() => {
+    fetchRFPs();
+  }, []);
+
+  const fetchRFPs = () => {
     fetch(BASE_URL + "/api/rfps", {
       credentials: "include",
     })
       .then((response) => response.json())
       .then((data) => setRfps(data))
       .catch((error) => console.error("Error fetching RFPs:", error));
-  }, []);
+  };
 
   const reprocessRFP = (id) => {
     fetch(BASE_URL + "/api/rfp/reprocess", {
@@ -32,7 +37,6 @@ const Rfp = () => {
     })
       .then((response) => {
         if (response.ok) {
-          // Optionally, refetch the RFPs or update the status locally
           setRfps((prevRfps) =>
             prevRfps.map((rfp) =>
               rfp.id === id ? { ...rfp, status: RFPStatusProcessing } : rfp
@@ -49,9 +53,27 @@ const Rfp = () => {
     return new Date(date).toLocaleString(); // This will include both date and time
   };
 
+  // Helper function to check if the end date is older than the creation date
+  const shouldShowEndDate = (creationDate, endDate) => {
+    if (!endDate || new Date(endDate) < new Date(creationDate)) {
+      return false;
+    }
+    return true;
+  };
+
   return (
     <div className="container mx-auto p-6">
-      <h1 className="text-2xl font-bold mb-4">RFP List</h1>
+      <div className="flex items-center mb-4">
+        <h1 className="text-2xl font-bold">RFP List</h1>
+        <button
+          onClick={fetchRFPs}
+          className="ml-2 text-blue-500 hover:text-blue-700"
+          aria-label="Refresh List"
+        >
+          <FiRefreshCw size={24} />
+        </button>
+      </div>
+
       <table className="table-auto w-full border-collapse text-left">
         <thead>
           <tr>
@@ -69,7 +91,11 @@ const Rfp = () => {
               <td className="px-4 py-2 border-b">
                 {formatDate(rfp.creation_date)}
               </td>
-              <td className="px-4 py-2 border-b">{formatDate(rfp.end_date)}</td>
+              <td className="px-4 py-2 border-b">
+                {shouldShowEndDate(rfp.creation_date, rfp.end_date)
+                  ? formatDate(rfp.end_date)
+                  : "-"}
+              </td>
               <td className="px-4 py-2 border-b">
                 <span
                   className={`px-2 py-1 rounded-full ${
@@ -88,8 +114,7 @@ const Rfp = () => {
                 </span>
               </td>
               <td className="px-4 py-2 border-b flex gap-2">
-                {(rfp.status === RFPStatusCreated ||
-                  rfp.status === RFPStatusFinishedWithError ||
+                {(rfp.status === RFPStatusFinishedWithError ||
                   rfp.status === RFPStatusFinished) && (
                   <button
                     onClick={() => reprocessRFP(rfp.id)}
@@ -103,11 +128,10 @@ const Rfp = () => {
                     onClick={() => navigate(`/rfp_detail/${rfp.id}`)}
                     className="bg-green-500 text-white py-1 px-3 rounded-md hover:bg-green-600"
                   >
-                    Go to Details
+                    Go to Results
                   </button>
                 )}
                 {!(
-                  rfp.status === RFPStatusCreated ||
                   rfp.status === RFPStatusFinishedWithError ||
                   rfp.status === RFPStatusFinished
                 ) && <span className="text-gray-500">N/A</span>}

@@ -57,7 +57,7 @@ func ListRFP(userId uint) ([]*models.RFP,error){
 
 	var rfps []*models.RFP
 
-	err = db.Preload("Equipments").Preload("Requirements").Where("user_id = ?",userId).Find(&rfps).Error
+	err = db.Preload("Equipments").Preload("Requirements").Where("user_id = ?",userId).Order("creation_date DESC").Find(&rfps).Error
 	if err != nil{
 		log.Println(err)
 		return nil,err
@@ -66,7 +66,7 @@ func ListRFP(userId uint) ([]*models.RFP,error){
 	return rfps,nil
 }
 
-func ListNewestCreatedRFP() (*models.RFP, error){
+func GetNewestCreatedRFP() (*models.RFP, error){
 
 	db, err := NewDBConnection()
 	if err != nil{
@@ -82,6 +82,26 @@ func ListNewestCreatedRFP() (*models.RFP, error){
 	}
 
 	return newestRFP,nil
+
+}
+
+
+func ListProcessingRFP() ([]*models.RFP, error){
+
+	db, err := NewDBConnection()
+	if err != nil{
+		return nil,err
+	}
+	defer CloseDBConnection(db)
+
+	var processingRFPs []*models.RFP
+
+	err = db.Preload("Equipments").Preload("Requirements").Where("status = ?",models.RFPtatusProcessing).Find(&processingRFPs).Error
+	if err != nil{
+		return nil,err
+	}
+
+	return processingRFPs,nil
 
 }
 

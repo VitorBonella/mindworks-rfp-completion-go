@@ -1,6 +1,8 @@
 package controllers
 
 import (
+	"time"
+
 	"github.com/VitorBonella/mindworks-rfp-completion-go/controllers/dto"
 	"github.com/VitorBonella/mindworks-rfp-completion-go/database"
 	"github.com/VitorBonella/mindworks-rfp-completion-go/models"
@@ -85,6 +87,18 @@ func ReprocessRFP(c *fiber.Ctx) error {
 			"message": "Can't Find RFP",
 		})
 	}
+
+	err = database.DeleteResults(rfp.Id)
+	if err != nil {
+		c.Status(fiber.StatusInternalServerError)
+		return c.JSON(fiber.Map{
+			"message": "DB ERROR",
+		})
+	}
+
+	now := time.Now()
+	rfp.CreationDate = &now
+	rfp.EndDate = nil
 
 	err = database.SetRFPStatus(rfp, models.RFPStatusCreated)
 	if err != nil {

@@ -42,3 +42,23 @@ func GetResults(rfpId uint, equipId uint) ([]*models.Result,error){
 
 	return results, nil
 }
+
+func DeleteResults(rfpId uint) error{
+
+	db, err := NewDBConnection()
+	if err != nil{
+		return err
+	}
+	defer CloseDBConnection(db)
+
+
+    result := &models.Result{}
+
+    err = db.Where("rfp_id = ?", rfpId).Delete(result).Error
+	if err != nil{
+		log.Println(err)
+		return err
+	}
+
+    return nil
+}

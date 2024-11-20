@@ -1,5 +1,4 @@
-import React, { useEffect, useState } from "react";
-
+import { useEffect, useState } from "react";
 import BASE_URL from "../main";
 
 const NewRFP = () => {
@@ -24,7 +23,7 @@ const NewRFP = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-  
+
     // Prepare the selected equipment objects in the correct format
     const selectedEquipments = equipments.filter((equipment) =>
       selectedEquipment.includes(equipment.id)
@@ -33,13 +32,13 @@ const NewRFP = () => {
       name: equipment.name,
       download_link: equipment.download_link
     }));
-  
+
     const rfpData = {
       name,
       requirements: requirements.split("\n").map((item) => item.trim()).filter(Boolean),
       equipments: selectedEquipments,  // Use the selected equipment objects
     };
-  
+
     // POST request to submit the RFP with credentials
     fetch(`${BASE_URL}/api/rfp`, {
       method: "POST",
@@ -57,12 +56,10 @@ const NewRFP = () => {
         return response.json(); // Only parse JSON if response is OK
       })
       .then((data) => {
-        if (data.message != ""){
-            throw new Error(`Error: ${data.message}`);
-        } else{
-            alert("RFP created successfully!");
+        if (data.message && data.message !== "") {
+          throw new Error(`Error: ${data.message}`);
         }
-        
+        alert("RFP created successfully!");
       })
       .catch((error) => {
         // Handle errors, including non-200 responses
@@ -137,6 +134,32 @@ const NewRFP = () => {
             ) : (
               <p className="text-sm text-gray-500">No equipment available</p>
             )}
+          </div>
+        </div>
+
+        {/* Requirements Preview Table */}
+        <div className="mt-8 mb-4">
+          <h2 className="text-lg font-semibold mb-2">Requirements Preview</h2>
+          <div className="overflow-y-auto max-h-40"> {/* Set a max height and make the table scrollable */}
+            <table className="min-w-full table-auto border-collapse border border-gray-300">
+              <thead>
+                <tr>
+                  <th className="px-4 py-2 border text-left">#</th>
+                  <th className="px-4 py-2 border text-left">Requirement</th>
+                </tr>
+              </thead>
+              <tbody>
+                {requirements.split("\n").map((req, index) => {
+                  if (req.trim() === "") return null; // Skip empty lines
+                  return (
+                    <tr key={index} className="transition-all duration-300 ease-in-out transform hover:bg-gray-100">
+                      <td className="px-4 py-2 border">{index + 1}</td>
+                      <td className="px-4 py-2 border">{req.trim()}</td>
+                    </tr>
+                  );
+                })}
+              </tbody>
+            </table>
           </div>
         </div>
 

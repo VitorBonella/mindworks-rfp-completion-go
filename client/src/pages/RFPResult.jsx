@@ -1,17 +1,18 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import BASE_URL from "../main";
 import { useParams } from "react-router-dom";
+import { downloadAsCSV } from "../utils/DownloadCsv"; // Import the utility
+import { downloadAsExcel } from "../utils/DownloadXlxs";
 
 function RFPResult() {
   const [rfpResults, setRfpResults] = useState({});
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [viewTable, setViewTable] = useState(false); // State for toggling the global view
-  const [productToggles, setProductToggles] = useState({}); // State for per-product toggles
+  const [viewTable, setViewTable] = useState(false);
+  const [productToggles, setProductToggles] = useState({});
   const { id } = useParams();
 
   useEffect(() => {
-    // Fetch data from the API
     fetch(BASE_URL + `/api/rfp/result?id=${id}`, {
       credentials: "include",
     })
@@ -24,9 +25,8 @@ function RFPResult() {
       .then((data) => {
         setRfpResults(data);
         setLoading(false);
-        // Initialize toggles for each product
         const initialToggles = Object.keys(data).reduce((acc, productName) => {
-          acc[productName] = false; // Default all to collapsed
+          acc[productName] = false;
           return acc;
         }, {});
         setProductToggles(initialToggles);
@@ -48,6 +48,14 @@ function RFPResult() {
     }));
   };
 
+  const handleDownload = () => {
+    downloadAsCSV("rfp_results.csv", rfpResults);
+  };
+
+  const handleDownloadExcel = () => {
+    downloadAsExcel("rfp_results.xlsx", rfpResults);
+  };
+
   const getRowBackgroundColor = (answer) => {
     if (answer === "Met") return "bg-green-100";
     if (answer === "Undefined") return "bg-yellow-100";
@@ -67,7 +75,6 @@ function RFPResult() {
   return (
     <div className="p-6">
       <h1 className="text-2xl font-bold mb-4">RFP Results</h1>
-
       {/* Global Toggle Button */}
       <button
         onClick={handleGlobalToggleView}
@@ -75,10 +82,20 @@ function RFPResult() {
       >
         {viewTable ? "Switch to Question View" : "Switch to Table View"}
       </button>
-
-      {/* View Based on Global Toggle */}
+      {/* Download Button */}
+      <button
+        onClick={handleDownload}
+        className="mb-4 ml-4 bg-green-500 text-white py-2 px-4 rounded-md hover:bg-green-600"
+      >
+        Download as CSV
+      </button>
+      <button
+        onClick={handleDownloadExcel}
+        className="mb-4 bg-green-500 text-white py-2 px-4 rounded-md hover:bg-green-600"
+      >
+        Download as XLSX
+      </button>
       {viewTable ? (
-        // Table View
         <div className="overflow-x-auto">
           <table className="min-w-full table-auto border-collapse border border-gray-200">
             <thead>
@@ -95,7 +112,9 @@ function RFPResult() {
               {Object.entries(rfpResults[equipmentNames[0]]?.Map || {}).map(
                 ([key, questionData]) => (
                   <tr key={key}>
-                    <td className="border px-4 py-2">{questionData.question}</td>
+                    <td className="border px-4 py-2">
+                      {questionData.question}
+                    </td>
                     {equipmentNames.map((equipmentName) => {
                       const answer =
                         rfpResults[equipmentName]?.Map[key]?.answer;
@@ -106,7 +125,11 @@ function RFPResult() {
                             answer
                           )}`}
                         >
-                          {answer === "Met" ? "✅" : answer === "Undefined" ? "❓" : "❌"}
+                          {answer === "Met"
+                            ? "✅"
+                            : answer === "Undefined"
+                            ? "❓"
+                            : "❌"}
                         </td>
                       );
                     })}
@@ -117,10 +140,12 @@ function RFPResult() {
           </table>
         </div>
       ) : (
-        // Normal View
         <div>
           {Object.entries(rfpResults).map(([productName, productData]) => (
-            <div key={productName} className="border rounded-lg p-4 mb-4 shadow-md">
+            <div
+              key={productName}
+              className="border rounded-lg p-4 mb-4 shadow-md"
+            >
               <div className="flex justify-between items-center">
                 <h2 className="text-xl font-semibold mb-2">{productName}</h2>
                 <button
