@@ -66,6 +66,7 @@ func RunQueue() {
 	}()
 
 	// Check if there are processing RFPs that need to be reverted to created
+	/*
 	go func() {
 		for {
 			// Check if taskQueue is empty
@@ -98,4 +99,5 @@ func RunQueue() {
 			time.Sleep(time.Second*90)
 		}
 	}()
+		*/
 }

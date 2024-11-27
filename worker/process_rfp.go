@@ -86,14 +86,13 @@ func ProcessRFP(rfp *models.RFP) error{
 			if err != nil {
 				log.Println("Failed to generate content",err)
 				time.Sleep(time.Second*60)
-				continue
+				return err
 			}
 			endTime := time.Now()
 			database.CreateResult(&models.Result{RFPId: rfp.Id,EquipmentId: rfp.Equipments[i].Id,Text : printResponse(resp),EndDate: &endTime})
 			log.Printf("[%d] PROCESSED RESULT %s %d/%d\n",rfp.Id, f.DisplayName,bi+1,len(jsonBlocks))
 			time.Sleep(time.Second*60)
 		}
-
 	}
 
 	rfpEndTime := time.Now()

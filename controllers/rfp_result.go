@@ -44,7 +44,10 @@ func RFPResult(c *fiber.Ctx) error{
 			})
 		}
 		
-		result_per_equipament[e.Name] = *models.ConcatResults(result)
+		resultEquip := models.ConcatResults(result)
+		if resultEquip != nil{
+			result_per_equipament[e.Name] = *resultEquip
+		}
 
 	}
 	return c.JSON(result_per_equipament)

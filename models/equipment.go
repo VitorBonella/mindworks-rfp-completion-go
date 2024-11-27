@@ -6,6 +6,7 @@ import (
 	"log"
 	"net/http"
 	"os"
+	"strings"
 )
 
 type Equipment struct {
@@ -61,11 +62,14 @@ func (e *Equipment) DownLoadFile(test bool) error{
 	}
 
 	// Set custom headers
-	req.Header.Set("User-Agent", "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/128.0.0.0 Safari/537.36")
-	req.Header.Set("Accept", "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8")
-	req.Header.Set("Accept-Encoding", "gzip, deflate, br")
-	req.Header.Set("Accept-Language", "en-US,en;q=0.9")
-	req.Header.Set("Referer", e.DownloadLink)
+	if !endsWithPDF(e.DownloadLink){
+		req.Header.Set("User-Agent", "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/128.0.0.0 Safari/537.36")
+		req.Header.Set("Accept", "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8")
+		req.Header.Set("Accept-Encoding", "gzip, deflate, br")
+		req.Header.Set("Accept-Language", "en-US,en;q=0.9")
+		req.Header.Set("Referer", e.DownloadLink)
+	}
+
 
 	// Create an HTTP client and execute the request
 	client := &http.Client{}
@@ -135,4 +139,8 @@ func DeleteManyFiles(paths []string){
 		}
 	}
 
+}
+
+func endsWithPDF(filename string) bool {
+	return strings.HasSuffix(strings.ToLower(filename), ".pdf")
 }
