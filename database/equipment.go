@@ -10,7 +10,10 @@ func CreateEquipment(equipment *models.Equipment) error{
 	}
 	defer CloseDBConnection(db)
 
-	db.Create(&equipment)
+	err = db.Create(&equipment).Error
+	if err != nil{
+		return err
+	}
 
 	return nil
 }

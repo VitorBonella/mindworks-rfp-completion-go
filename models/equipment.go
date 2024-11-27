@@ -11,8 +11,8 @@ import (
 
 type Equipment struct {
 	Id       uint   `json:"id"`
-	Name     string `json:"name" gorm:"unique" validate:"required"`
-	DownloadLink     string `json:"download_link" gorm:"unique" validate:"required"`
+	Name     string `json:"name" validate:"required"`
+	DownloadLink     string `json:"download_link" validate:"required"`
 	UserId uint `json:"user_id"`
 }
 
