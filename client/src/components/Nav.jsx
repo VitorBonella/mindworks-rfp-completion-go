@@ -1,4 +1,5 @@
 import { Link } from "react-router-dom";
+import logo from '../assets/logo.png';
 import BASE_URL from "../main";
 
 function Nav({ name, setName }) {
@@ -15,10 +16,10 @@ function Nav({ name, setName }) {
 
   return (
     <nav className="flex items-center justify-between flex-wrap bg-blue-600 p-6">
-      <div className="flex items-center flex-shrink-0 text-white mr-6">
+      <div className="flex items-center flex-shrink-0 text-white mr-2">
         <img
-          className="fill-current h-8 w-8 mr-2"
-          src="https://cdn-icons-png.flaticon.com/512/5208/5208460.png"
+          className="fill-current h-9 w-11 mr-2"
+          src={logo}
         />
       </div>
       <div className="w-full block flex-grow lg:flex lg:items-center lg:w-auto">

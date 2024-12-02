@@ -1,6 +1,7 @@
-import  {useState } from "react";
+import { useState } from "react";
 import { Navigate } from "react-router-dom";
-import BASE_URL from "../main"
+import logo from '../assets/mindfiller.png';
+import BASE_URL from "../main";
 
 function Login() {
   const [name, setName] = useState("");
@@ -10,7 +11,7 @@ function Login() {
   const submit = async (e) => {
     e.preventDefault();
 
-    const response = await fetch(BASE_URL+"/api/login", {
+    const response = await fetch(BASE_URL + "/api/login", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       credentials: "include",
@@ -21,12 +22,12 @@ function Login() {
     });
 
     const content = await response.json();
-    
+
     if (response.status !== 200) {
-        alert(content.message)
+      alert(content.message);
     } else {
-        setRedirect(true);
-        setName(content.name);
+      setRedirect(true);
+      setName(content.name);
     }
   };
 
@@ -35,8 +36,16 @@ function Login() {
   }
 
   return (
-    <div className="flex justify-center">
+    <div className="flex justify-center min-h-screen items-center bg-gray-100">
       <div className="w-full max-w-xs">
+        {/* Logo Section */}
+        <div className="flex justify-center mb-6">
+          <img
+            src={logo} // Replace with the actual path to your logo
+            alt="Logo"
+          />
+        </div>
+        {/* Login Form */}
         <form
           className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4"
           onSubmit={submit}
